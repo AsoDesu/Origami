@@ -9,8 +9,8 @@ class Interpolation<T>(val start: T, val end: T, val duration: Duration, private
         private set
 
     fun tick(): T {
-        val i = progress / duration.ticks.toFloat()
         progress++
+        val i = progress / duration.ticks.toFloat()
         if (progress >= duration.ticks) isFinished = true
         return lerp(i)
     }
