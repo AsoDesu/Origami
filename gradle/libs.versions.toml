@@ -1,0 +1,22 @@
+[versions]
+kotlin = "2.0.10"
+paper = "1.21.1-R0.1-SNAPSHOT"
+cloud = "1.8.4"
+adventure = "4.17.0"
+
+[libraries]
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+
+cloud-core = { module = "cloud.commandframework:cloud-core", version.ref = "cloud" }
+cloud-paper = { module = "cloud.commandframework:cloud-paper", version.ref = "cloud" }
+cloud-kotlin = { module = "cloud.commandframework:cloud-kotlin-extensions", version.ref = "cloud" }
+cloud-mcextras = { module = "cloud.commandframework:cloud-minecraft-extras", version.ref = "cloud" }
+
+kyori-adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+kyori-adventure-key = { module = "net.kyori:adventure-key", version.ref = "adventure" }
+kyori-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+
+[plugins]
+run-paper = { id = "xyz.jpenilla.run-paper", version = "2.3.0" }
+pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version = "0.6.0" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.0" }
