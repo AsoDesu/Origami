@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import kotlin.math.min
 
 class DashRestoreBehaviour(c: PlayerBehaviourContainer, var restoreAmount: Int = 2) : PlayerBehaviour(c) {
-    private val dashBehaviour by lazy { get(DashBehaviour::class) }
+    private val dashBehaviour by lazy { get<DashBehaviour>() }
 
     @Subscribe
     fun interact(evt: PlayerInteractEvent) {

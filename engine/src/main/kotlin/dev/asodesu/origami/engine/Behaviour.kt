@@ -1,24 +1,32 @@
 package dev.asodesu.origami.engine
 
+import dev.asodesu.origami.engine.scopes.Scope
 import dev.asodesu.origami.engine.wiring.events.EventFilter
 import org.bukkit.event.Event
 import org.bukkit.event.Listener
-import kotlin.reflect.KClass
 
 /**
  * A Behaviour is a discrete component which adds custom logic to whatever
  * it is applied to.
  */
-abstract class Behaviour : EventFilter, Listener {
-    lateinit var gameObject: BehaviourApplicable
+abstract class Behaviour : EventFilter, Destroyable, Listener {
+    internal lateinit var internalGameObject: BehaviourApplicable
+    internal var internalScope: Scope = Scope.global
 
-    protected val behaviours get() = gameObject.behaviours
-    protected fun <T : Behaviour> get(clazz: KClass<T>) = gameObject.get(clazz)
-    protected fun <T : Behaviour> getOrAdd(clazz: KClass<T>, creator: BehaviourCreator<T>?) = gameObject.getOrAdd(clazz, creator)
-    protected fun <T : Behaviour> has(clazz: KClass<T>) = gameObject.has(clazz)
-    protected fun <T : Behaviour> replace(clazz: KClass<T>, instance: T?) = gameObject.replace(clazz, instance)
-    protected fun <T : Behaviour> add(clazz: KClass<T>, instance: T?) = gameObject.add(clazz, instance)
-    protected fun <T : Behaviour> remove(clazz: KClass<T>) = gameObject.remove(clazz)
+    protected val gameObject get() = internalGameObject
+    protected val scope get() = internalScope
+
+    protected inline fun <reified T : Behaviour> getOrNull() = gameObject.getOrNull(T::class)
+    protected inline fun <reified T : Behaviour> get() = gameObject.get(T::class)
+    protected inline fun <reified T : Behaviour> getOrAdd(scope: Scope? = this.scope, noinline creator: BehaviourCreator<T>? = null) = gameObject.getOrAdd(T::class, scope, creator)
+    protected inline fun <reified T : Behaviour> has() = gameObject.has(T::class)
+    protected inline fun <reified T : Behaviour> replace(instance: T? = null, scope: Scope? = this.scope) = gameObject.replace(T::class, instance, scope)
+    protected inline fun <reified T : Behaviour> add(instance: T? = null, scope: Scope? = this.scope) = gameObject.add(T::class, instance, scope)
+    protected inline fun <reified T : Behaviour> remove() = gameObject.remove(T::class)
 
     override fun filter(event: Event): Boolean = true
+
+    override fun destroy() {
+        gameObject.remove(this::class)
+    }
 }

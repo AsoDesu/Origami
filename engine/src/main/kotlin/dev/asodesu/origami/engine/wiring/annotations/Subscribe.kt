@@ -1,6 +1,5 @@
 package dev.asodesu.origami.engine.wiring.annotations
 
-import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 
 annotation class Subscribe(

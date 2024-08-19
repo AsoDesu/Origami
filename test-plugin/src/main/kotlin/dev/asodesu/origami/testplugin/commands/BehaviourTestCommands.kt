@@ -8,6 +8,8 @@ import dev.asodesu.origami.engine.impl.BehaviourContainer
 import dev.asodesu.origami.engine.player.container
 import dev.asodesu.origami.engine.remove
 import dev.asodesu.origami.engine.replace
+import dev.asodesu.origami.engine.scopes.global
+import dev.asodesu.origami.engine.scopes.scope
 import dev.asodesu.origami.testplugin.behaviours.DashBehaviour
 import dev.asodesu.origami.testplugin.behaviours.DashRestoreBehaviour
 import dev.asodesu.origami.testplugin.behaviours.InstantHealthBehaviour
@@ -115,9 +117,13 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
         handler { ctx ->
             val player = ctx.sender as Player
             val container = player.container
-            container.replace<DashBehaviour>()
-            container.replace<DashRestoreBehaviour>()
-            container.replace<InstantHealthBehaviour>()
+
+            // extendable, can pass in any scope
+            scope(global) {
+                container.replace<DashBehaviour>()
+                container.replace<DashRestoreBehaviour>()
+                container.replace<InstantHealthBehaviour>()
+            }
 
             player.inventory.setItem(7, InstantHealthBehaviour.getInstantHealth(amplifier = 2))
             player.inventory.setItem(8, ItemStack(Material.PHANTOM_MEMBRANE, 64))
