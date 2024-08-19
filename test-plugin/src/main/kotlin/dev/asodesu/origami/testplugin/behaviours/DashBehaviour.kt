@@ -20,20 +20,26 @@ import kotlin.math.min
 import kotlin.random.Random
 
 class DashBehaviour(c: PlayerBehaviourContainer,  val maxDashInventory: Int = 2) : OnlinePlayerBehaviour(c) {
-    var dashInventory = 0
+    var dashInventory = 2
         set(value) {
+            val was = field
             field = value
-            updateDashCounter()
+            updateDashCounter(was)
         }
 
     private var isDashing = false
     private val canDash get() = dashInventory > 0
 
-    fun updateDashCounter() {
+    fun updateDashCounter(was: Int) {
+        val target = min(dashInventory / maxDashInventory.toFloat(), 0.99999f)
         player.level = dashInventory
 
-        val target = min(dashInventory / maxDashInventory.toFloat(), 0.99999f)
-        expInterpolation = Interpolation.float(player.exp, target, 4.ticks)
+        if (dashInventory < was)
+            expInterpolation = Interpolation.float(player.exp, target, 4.ticks)
+        else {
+            player.exp = target
+            expInterpolation = null
+        }
     }
 
     var expInterpolation: Interpolation<Float>? = null

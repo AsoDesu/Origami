@@ -1,5 +1,6 @@
 package dev.asodesu.origami.testplugin.behaviours
 
+import dev.asodesu.origami.engine.consumeCooldown
 import dev.asodesu.origami.engine.player.PlayerBehaviour
 import dev.asodesu.origami.engine.player.PlayerBehaviourContainer
 import dev.asodesu.origami.engine.wiring.annotations.Subscribe
@@ -43,7 +44,7 @@ class InstantHealthBehaviour(c: PlayerBehaviourContainer) : PlayerBehaviour(c) {
         val item = evt.item ?: return
         if (item.type != Material.POTION) return
         if (!evt.action.isRightClick) return
-        if (consumeCooldown("potion_interact", 1.ticks)) return
+        if (player.consumeCooldown("interact", 1.ticks)) return
 
         val meta = item.itemMeta as? PotionMeta ?: return
         if (!meta.persistentDataContainer.has(KEY_INSTANT_POTION)) return

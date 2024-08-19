@@ -1,5 +1,6 @@
 package dev.asodesu.origami.testplugin.behaviours
 
+import dev.asodesu.origami.engine.consumeCooldown
 import dev.asodesu.origami.engine.player.PlayerBehaviour
 import dev.asodesu.origami.engine.player.PlayerBehaviourContainer
 import dev.asodesu.origami.engine.wiring.annotations.Subscribe
@@ -17,7 +18,7 @@ class DashRestoreBehaviour(c: PlayerBehaviourContainer, var restoreAmount: Int =
     fun interact(evt: PlayerInteractEvent) {
         val item = evt.item ?: return
         if (item.type != Material.PHANTOM_MEMBRANE) return
-        if (consumeCooldown("dash_restore", 1.ticks)) return
+        if (player.consumeCooldown("interact", 1.ticks)) return
         item.subtract(1)
         evt.isCancelled = true
 

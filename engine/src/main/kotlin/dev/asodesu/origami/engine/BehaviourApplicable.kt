@@ -1,13 +1,11 @@
 package dev.asodesu.origami.engine
 
-import dev.asodesu.origami.utilities.bukkit.cooldown.CooldownHandler
 import kotlin.reflect.KClass
 
 typealias BehaviourCreator<T> = (BehaviourApplicable) -> T
 
 interface BehaviourApplicable {
     val behaviours: Collection<Behaviour>
-    val cooldowns: CooldownHandler
 
     fun <T : Behaviour> getOrNull(clazz: KClass<T>): T?
     fun <T : Behaviour> get(clazz: KClass<T>): T

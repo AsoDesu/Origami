@@ -4,7 +4,6 @@ import dev.asodesu.origami.engine.wiring.events.EventFilter
 import org.bukkit.event.Event
 import org.bukkit.event.Listener
 import kotlin.reflect.KClass
-import kotlin.time.Duration
 
 /**
  * A Behaviour is a discrete component which adds custom logic to whatever
@@ -12,9 +11,6 @@ import kotlin.time.Duration
  */
 abstract class Behaviour : EventFilter, Listener {
     lateinit var gameObject: BehaviourApplicable
-
-    protected fun checkCooldown(key: String, time: Duration) = gameObject.cooldowns.checkCooldown(key, time)
-    protected fun consumeCooldown(key: String, time: Duration) = gameObject.cooldowns.consumeCooldown(key, time)
 
     protected val behaviours get() = gameObject.behaviours
     protected fun <T : Behaviour> get(clazz: KClass<T>) = gameObject.get(clazz)

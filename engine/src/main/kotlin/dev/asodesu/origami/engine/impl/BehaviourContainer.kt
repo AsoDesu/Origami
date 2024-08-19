@@ -5,13 +5,11 @@ import dev.asodesu.origami.engine.BehaviourApplicable
 import dev.asodesu.origami.engine.BehaviourCreator
 import dev.asodesu.origami.engine.error.BehaviourAlreadyAttachedException
 import dev.asodesu.origami.engine.wiring.BehaviourWiring.wiring
-import dev.asodesu.origami.utilities.bukkit.cooldown.SimpleCooldowns
 import dev.asodesu.origami.utilities.bukkit.unregister
 import kotlin.reflect.KClass
 
 open class BehaviourContainer : BehaviourApplicable {
     protected val behaviourMap = mutableMapOf<Class<out Behaviour>, Behaviour>()
-    override val cooldowns = SimpleCooldowns()
     override val behaviours get() = behaviourMap.values
 
     override fun <T : Behaviour> getOrNull(clazz: KClass<T>): T? {
@@ -25,7 +23,7 @@ open class BehaviourContainer : BehaviourApplicable {
     }
 
     override fun <T : Behaviour> getOrAdd(clazz: KClass<T>, creator: BehaviourCreator<T>?): T {
-        val get = get(clazz)
+        val get = getOrNull(clazz)
         if (get != null) return get
         return add(clazz, creator?.invoke(this))
     }

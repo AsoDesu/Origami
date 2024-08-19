@@ -5,7 +5,7 @@ import dev.asodesu.origami.engine.add
 import dev.asodesu.origami.engine.get
 import dev.asodesu.origami.engine.getOrAdd
 import dev.asodesu.origami.engine.impl.BehaviourContainer
-import dev.asodesu.origami.engine.player.behaviourContainer
+import dev.asodesu.origami.engine.player.container
 import dev.asodesu.origami.engine.remove
 import dev.asodesu.origami.engine.replace
 import dev.asodesu.origami.testplugin.behaviours.DashBehaviour
@@ -88,7 +88,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
         senderType(Player::class.java)
         handler {
             val player = it.sender as Player
-            val container = player.behaviourContainer
+            val container = player.container
             val test = Test(player)
 
             test.run("PlayerBehaviourContainer is empty") {
@@ -102,7 +102,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
                 container.get(TestBehaviour::class)?.test() == true
             }
             test.run("new PlayerBehaviourContainer access behaviour") {
-                player.behaviourContainer.get(TestBehaviour::class)?.test() == true
+                player.container.get(TestBehaviour::class)?.test() == true
             }
             test.run("PlayerBehaviourContainer remove behaviour") {
                 container.remove(TestBehaviour::class) != null
@@ -114,7 +114,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
         senderType(Player::class.java)
         handler { ctx ->
             val player = ctx.sender as Player
-            val container = player.behaviourContainer
+            val container = player.container
             container.replace<DashBehaviour>()
             container.replace<DashRestoreBehaviour>()
             container.replace<InstantHealthBehaviour>()
