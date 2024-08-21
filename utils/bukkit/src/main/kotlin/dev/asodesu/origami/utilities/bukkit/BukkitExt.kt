@@ -10,5 +10,6 @@ val pluginLogger get() = plugin.slF4JLogger
 val server get() = Bukkit.getServer()
 val pluginManager get() = server.pluginManager
 val scheduler get() = server.scheduler
+val consoleSender get() = server.consoleSender
 val allPlayers: MutableCollection<out Player> get() = server.onlinePlayers
 val tickNumber get() = server.currentTick

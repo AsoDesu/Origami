@@ -18,6 +18,8 @@ fun Audience.warning(str: String) = DesignProvider.impl.warning(this, str)
 fun Audience.info(str: String) = DesignProvider.impl.info(this, str)
 fun Audience.error(str: String) = DesignProvider.impl.error(this, str)
 
+fun Audience.debug(str: String) = this.send("<color:#b37deb>[DEBUG]</color> <gray>$str")
+
 fun times(fadeIn: Duration, stay: Duration, fadeOut: Duration) =
     Title.Times.times(fadeIn.toJavaDuration(), stay.toJavaDuration(), fadeOut.toJavaDuration())
 

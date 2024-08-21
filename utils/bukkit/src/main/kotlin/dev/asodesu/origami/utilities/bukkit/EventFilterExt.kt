@@ -1,13 +1,11 @@
 package dev.asodesu.origami.utilities.bukkit
 
 import org.bukkit.OfflinePlayer
-import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityEvent
-import org.bukkit.event.inventory.InventoryEvent
 import org.bukkit.event.inventory.InventoryInteractEvent
 import org.bukkit.event.player.PlayerEvent
 
