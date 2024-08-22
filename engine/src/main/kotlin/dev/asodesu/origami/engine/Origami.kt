@@ -1,6 +1,7 @@
 package dev.asodesu.origami.engine
 
 import dev.asodesu.origami.engine.config.OrigamiConfig
+import dev.asodesu.origami.engine.debug.OrigamiCommand
 import dev.asodesu.origami.engine.player.PlayerBehaviourRegistry
 import dev.asodesu.origami.utilities.bukkit.BukkitUtilities
 import dev.asodesu.origami.utilities.bukkit.register
@@ -12,6 +13,7 @@ object Origami {
 
     fun init(plugin: JavaPlugin) {
         CloudCommandManager.init(plugin)
+        OrigamiCommand.register()
         BukkitUtilities.init(plugin)
 
         PlayerBehaviourRegistry.register()

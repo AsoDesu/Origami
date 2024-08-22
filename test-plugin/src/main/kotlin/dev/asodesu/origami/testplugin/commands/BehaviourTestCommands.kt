@@ -8,12 +8,14 @@ import dev.asodesu.origami.engine.impl.BehaviourContainer
 import dev.asodesu.origami.engine.player.container
 import dev.asodesu.origami.engine.remove
 import dev.asodesu.origami.engine.replace
+import dev.asodesu.origami.engine.scene.Scene
 import dev.asodesu.origami.engine.scopes.global
 import dev.asodesu.origami.engine.scopes.scope
 import dev.asodesu.origami.testplugin.behaviours.DashBehaviour
 import dev.asodesu.origami.testplugin.behaviours.DashRestoreBehaviour
 import dev.asodesu.origami.testplugin.behaviours.InstantHealthBehaviour
 import dev.asodesu.origami.testplugin.behaviours.TestBehaviour
+import dev.asodesu.origami.testplugin.scenes.TestOnlineScene
 import dev.asodesu.origami.testplugin.tests.Test
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
@@ -127,6 +129,22 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
 
             player.inventory.setItem(7, InstantHealthBehaviour.getInstantHealth(amplifier = 2))
             player.inventory.setItem(8, ItemStack(Material.PHANTOM_MEMBRANE, 64))
+        }
+    }
+
+    var scene: Scene? = null
+    registerCopy("init_scene") {
+        handler {
+            scene?.destroy()
+            val testScene = TestOnlineScene()
+            testScene.init()
+            scene = testScene
+        }
+    }
+    registerCopy("destory_scene") {
+        handler {
+            scene?.destroy()
+            scene = null
         }
     }
 }

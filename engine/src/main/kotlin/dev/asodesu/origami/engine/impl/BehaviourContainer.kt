@@ -3,6 +3,7 @@ package dev.asodesu.origami.engine.impl
 import dev.asodesu.origami.engine.Behaviour
 import dev.asodesu.origami.engine.BehaviourApplicable
 import dev.asodesu.origami.engine.BehaviourCreator
+import dev.asodesu.origami.engine.debug.Debuggable
 import dev.asodesu.origami.engine.error.BehaviourAlreadyAttachedException
 import dev.asodesu.origami.engine.scopes.CurrentScopeContext
 import dev.asodesu.origami.engine.scopes.Scope
@@ -10,7 +11,7 @@ import dev.asodesu.origami.engine.wiring.BehaviourWiring.wiring
 import dev.asodesu.origami.utilities.bukkit.unregister
 import kotlin.reflect.KClass
 
-open class BehaviourContainer : BehaviourApplicable {
+open class BehaviourContainer : BehaviourApplicable, Debuggable {
     protected val behaviourMap = mutableMapOf<Class<out Behaviour>, Behaviour>()
     override val behaviours get() = behaviourMap.values
 
@@ -42,7 +43,7 @@ open class BehaviourContainer : BehaviourApplicable {
         val behaviourToAdd = instance ?: BehaviourFactory.create(clazz, this)
         behaviourMap[clazz.java] = behaviourToAdd
 
-        realScope.add(behaviourToAdd)
+        realScope.addDestroyable(behaviourToAdd)
         behaviourToAdd.internalGameObject = this
         behaviourToAdd.internalScope = realScope
 
@@ -61,12 +62,21 @@ open class BehaviourContainer : BehaviourApplicable {
 
     override fun <T : Behaviour> remove(clazz: KClass<T>): T? {
         val removed = behaviourMap.remove(clazz.java) ?: return null
-
-        removed.internalScope.remove(removed)
-        removed.destroy()
-        removed.unregister()
-
-        removed.wiring.postRemove(removed)
+        destroyBehaviour(removed)
         return removed as? T
+    }
+
+    override fun destroyBehaviour(instance: Behaviour) {
+        instance.internalScope.removeDestroyable(instance)
+        instance.destroy()
+        instance.unregister()
+        instance.wiring.postRemove(instance)
+    }
+
+    override fun getDebugInfo() = buildString {
+        appendLine("Behaviours: <origami>[${behaviours.size} applied]</origami>")
+        behaviours.forEachIndexed { i, it ->
+            appendLine(" - <origami>${it::class.simpleName}</origami>")
+        }
     }
 }

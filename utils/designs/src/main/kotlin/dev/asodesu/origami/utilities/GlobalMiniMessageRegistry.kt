@@ -2,10 +2,13 @@ package dev.asodesu.origami.utilities
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 object GlobalMiniMessageRegistry : MiniMessageProvider {
-    private val tags = mutableListOf<TagResolver>()
+    private val tags = mutableListOf<TagResolver>(
+        TagResolver.resolver("origami", Tag.styling { it.color(brandColor) })
+    )
     private var serializer = build()
 
     override fun miniMessage(str: String): Component {

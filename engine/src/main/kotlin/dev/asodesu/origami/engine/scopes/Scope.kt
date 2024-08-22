@@ -4,13 +4,13 @@ import dev.asodesu.origami.engine.Destroyable
 
 interface Scope : Destroyable {
     companion object {
-        val global = ListScope("~global")
+        val global = GlobalScope()
     }
 
     val id: String
 
-    fun add(destroyable: Destroyable): Boolean
-    fun remove(destroyable: Destroyable): Boolean
+    fun addDestroyable(destroyable: Destroyable)
+    fun removeDestroyable(destroyable: Destroyable)
 
     fun use(func: () -> Unit) {
         CurrentScopeContext.push(this)

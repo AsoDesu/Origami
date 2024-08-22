@@ -59,7 +59,7 @@ internal object BehaviourWiring {
 
             // check for @PostRemove methods, or the postRemove() function
             if (method.isAnnotationPresent(PostRemove::class.java)) checkPostRemoveFunction(method)
-            else if (removeFunctions.isEmpty() && method.name == "postApply") checkPostRemoveFunction(method)
+            else if (removeFunctions.isEmpty() && method.name == "postRemove") checkPostRemoveFunction(method)
         }
 
         private fun checkPostApplyFunction(method: Method) {

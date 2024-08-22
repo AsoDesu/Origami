@@ -15,4 +15,6 @@ interface BehaviourApplicable {
     fun <T : Behaviour> replace(clazz: KClass<T>, instance: T? = null, scope: Scope? = null): T
     fun <T : Behaviour> add(clazz: KClass<T>, instance: T? = null, scope: Scope? = null): T
     fun <T : Behaviour> remove(clazz: KClass<T>): T?
+
+    fun destroyBehaviour(instance: Behaviour)
 }
