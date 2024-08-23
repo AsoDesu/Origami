@@ -6,7 +6,7 @@ import dev.asodesu.origami.engine.BehaviourCreator
 import dev.asodesu.origami.engine.debug.Debuggable
 import dev.asodesu.origami.engine.error.BehaviourAlreadyAttachedException
 import dev.asodesu.origami.engine.scopes.CurrentScopeContext
-import dev.asodesu.origami.engine.scopes.Scope
+import dev.asodesu.origami.engine.scopes.SceneScope
 import dev.asodesu.origami.engine.wiring.BehaviourWiring.wiring
 import dev.asodesu.origami.utilities.bukkit.unregister
 import kotlin.reflect.KClass
@@ -25,7 +25,7 @@ open class BehaviourContainer : BehaviourApplicable, Debuggable {
         return instance as? T
     }
 
-    override fun <T : Behaviour> getOrAdd(clazz: KClass<T>, scope: Scope?, creator: BehaviourCreator<T>?): T {
+    override fun <T : Behaviour> getOrAdd(clazz: KClass<T>, scope: SceneScope?, creator: BehaviourCreator<T>?): T {
         val get = getOrNull(clazz)
         if (get != null) return get
         return add(clazz, creator?.invoke(this), scope)
@@ -33,7 +33,7 @@ open class BehaviourContainer : BehaviourApplicable, Debuggable {
 
     override fun <T : Behaviour> has(clazz: KClass<T>) = behaviourMap.containsKey(clazz.java)
 
-    override fun <T : Behaviour> add(clazz: KClass<T>, instance: T?, scope: Scope?): T {
+    override fun <T : Behaviour> add(clazz: KClass<T>, instance: T?, scope: SceneScope?): T {
         if (has(clazz)) {
             throw BehaviourAlreadyAttachedException("Behaviour '${clazz.java.name}' is already attached to this container. " +
                     "Use BehaviourApplicable#replace to replace a behaviour")
@@ -55,7 +55,7 @@ open class BehaviourContainer : BehaviourApplicable, Debuggable {
         return behaviourToAdd
     }
 
-    override fun <T : Behaviour> replace(clazz: KClass<T>, instance: T?, scope: Scope?): T {
+    override fun <T : Behaviour> replace(clazz: KClass<T>, instance: T?, scope: SceneScope?): T {
         remove(clazz)
         return add(clazz, instance, scope)
     }

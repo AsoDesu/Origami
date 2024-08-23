@@ -8,12 +8,12 @@ import dev.asodesu.origami.engine.logging.logger
 import dev.asodesu.origami.utilities.NullableStack
 import dev.asodesu.origami.utilities.nullableStackOf
 
-object CurrentScopeContext : NullableStack<Scope> {
-    private val threadLocal: ThreadLocal<NullableStack<Scope>> = ThreadLocal.withInitial { nullableStackOf() }
+object CurrentScopeContext : NullableStack<SceneScope> {
+    private val threadLocal: ThreadLocal<NullableStack<SceneScope>> = ThreadLocal.withInitial { nullableStackOf() }
 
-    override fun push(value: Scope) = threadLocal.get().push(value)
+    override fun push(value: SceneScope) = threadLocal.get().push(value)
     override fun pop() = threadLocal.get().pop()
-    override fun peek(): Scope {
+    override fun peek(): SceneScope {
         val get = threadLocal.get().peek()
         if (get == null) {
             when (Origami.config.scopeWarningLevel) {
@@ -31,5 +31,5 @@ object CurrentScopeContext : NullableStack<Scope> {
         return get
     }
 
-    override fun contains(value: Scope) = threadLocal.get().contains(value)
+    override fun contains(value: SceneScope) = threadLocal.get().contains(value)
 }

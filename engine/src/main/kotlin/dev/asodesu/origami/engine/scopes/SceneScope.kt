@@ -2,7 +2,7 @@ package dev.asodesu.origami.engine.scopes
 
 import dev.asodesu.origami.engine.Destroyable
 
-interface Scope : Destroyable {
+interface SceneScope : Destroyable {
     companion object {
         val global = GlobalScope()
     }

@@ -1,7 +1,7 @@
 package dev.asodesu.origami.engine.scopes
 
-val global get() = Scope.global
+val global get() = SceneScope.global
 
-fun scope(scope: Scope, func: () -> Unit) {
+fun scope(scope: SceneScope, func: () -> Unit) {
     scope.use(func)
 }

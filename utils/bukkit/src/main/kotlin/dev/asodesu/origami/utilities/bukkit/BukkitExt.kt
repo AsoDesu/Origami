@@ -13,3 +13,5 @@ val scheduler get() = server.scheduler
 val consoleSender get() = server.consoleSender
 val allPlayers: MutableCollection<out Player> get() = server.onlinePlayers
 val tickNumber get() = server.currentTick
+
+val Player.offlinePlayerReference get() = Bukkit.getOfflinePlayer(this.uniqueId)

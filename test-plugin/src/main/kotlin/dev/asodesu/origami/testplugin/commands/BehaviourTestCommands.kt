@@ -1,5 +1,6 @@
 package dev.asodesu.origami.testplugin.commands
 
+import cloud.commandframework.arguments.standard.StringArgument
 import cloud.commandframework.kotlin.MutableCommandBuilder
 import dev.asodesu.origami.engine.add
 import dev.asodesu.origami.engine.get
@@ -8,16 +9,21 @@ import dev.asodesu.origami.engine.impl.BehaviourContainer
 import dev.asodesu.origami.engine.player.container
 import dev.asodesu.origami.engine.remove
 import dev.asodesu.origami.engine.replace
-import dev.asodesu.origami.engine.scene.Scene
+import dev.asodesu.origami.engine.scene.PlayerScene
+import dev.asodesu.origami.engine.scene.Scenes
 import dev.asodesu.origami.engine.scopes.global
 import dev.asodesu.origami.engine.scopes.scope
 import dev.asodesu.origami.testplugin.behaviours.DashBehaviour
 import dev.asodesu.origami.testplugin.behaviours.DashRestoreBehaviour
 import dev.asodesu.origami.testplugin.behaviours.InstantHealthBehaviour
 import dev.asodesu.origami.testplugin.behaviours.TestBehaviour
+import dev.asodesu.origami.testplugin.scenes.TestOfflineScene
 import dev.asodesu.origami.testplugin.scenes.TestOnlineScene
+import dev.asodesu.origami.testplugin.scenes.TestScopedScene
 import dev.asodesu.origami.testplugin.tests.Test
+import dev.asodesu.origami.utilities.error
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -132,19 +138,48 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
         }
     }
 
-    var scene: Scene? = null
-    registerCopy("init_scene") {
+    registerCopy("init_online_scene") {
         handler {
-            scene?.destroy()
-            val testScene = TestOnlineScene()
-            testScene.init()
-            scene = testScene
+            Scenes.register(TestOnlineScene())
+        }
+    }
+    registerCopy("init_offline_scene") {
+        handler {
+            Scenes.register(TestOfflineScene())
         }
     }
     registerCopy("destory_scene") {
         handler {
-            scene?.destroy()
-            scene = null
+            Scenes.map.values.toList().forEach {
+                Scenes.unregister(it)
+            }
+        }
+    }
+
+    registerCopy("init_world_scenes") {
+        handler {
+            Scenes.register(TestScopedScene("test1"))
+            Scenes.register(TestScopedScene("two"))
+        }
+    }
+    registerCopy("leave_scene") {
+        senderType(Player::class.java)
+        argument(StringArgument.of("id"))
+        handler {
+            val id = it.get<String>("id")
+            val scene = Scenes.map[id] ?: return@handler it.sender.error("no scene.")
+            val scopedScene = (scene as? PlayerScene<OfflinePlayer>) ?: return@handler it.sender.error("not player scene")
+            scopedScene.removePlayer(it.sender as OfflinePlayer)
+        }
+    }
+    registerCopy("join_scene") {
+        senderType(Player::class.java)
+        argument(StringArgument.of("id"))
+        handler {
+            val id = it.get<String>("id")
+            val scene = Scenes.map[id] ?: return@handler it.sender.error("no scene.")
+            val scopedScene = (scene as? PlayerScene<OfflinePlayer>) ?: return@handler it.sender.error("not player scene")
+            scopedScene.addPlayer(it.sender as OfflinePlayer)
         }
     }
 }

@@ -63,7 +63,7 @@ class DashBehaviour(c: PlayerBehaviourContainer,  val maxDashInventory: Int = 2)
         evt.isCancelled = true
 
         if (!canDash) return
-        player.velocity = player.location.direction.multiply(2.0)
+        player.velocity = player.location.direction.multiply(1.5)
         isDashing = true
         dashInventory--
 

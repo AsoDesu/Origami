@@ -16,7 +16,7 @@ class TestSceneBehaviour(val scene: Scene) : Behaviour() {
     @Subscribe
     fun chat(evt: AsyncChatEvent) {
         val str = PlainTextComponentSerializer.plainText().serialize(evt.message())
-        debug("[${scene::class.simpleName}] ${evt.player.name} -> $str")
+        debug("[${scene.id}] ${evt.player.name} -> $str")
         evt.isCancelled = true
     }
 

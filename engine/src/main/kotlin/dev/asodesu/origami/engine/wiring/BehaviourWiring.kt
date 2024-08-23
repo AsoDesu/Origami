@@ -3,6 +3,7 @@ package dev.asodesu.origami.engine.wiring
 import dev.asodesu.origami.engine.Behaviour
 import dev.asodesu.origami.engine.wiring.annotations.PostApply
 import dev.asodesu.origami.engine.wiring.annotations.PostRemove
+import dev.asodesu.origami.engine.wiring.events.EventFilter
 import dev.asodesu.origami.engine.wiring.events.EventMethods
 import dev.asodesu.origami.engine.wiring.events.FilteredEvents
 import dev.asodesu.origami.engine.wiring.events.ticks.TickEvents
@@ -45,11 +46,22 @@ internal object BehaviourWiring {
         fun postRemove(behaviour: Behaviour) = removeFunctions.forEach { it.invoke(behaviour) }
         fun registerTickMethods(behaviour: Behaviour) {
             if (tickMethods.isEmpty()) return
-            TickEvents.register(behaviour, behaviour as? TickFilter, tickMethods)
+            val filters = listOfNotNull(behaviour.internalScope as? TickFilter, behaviour as? TickFilter).toTypedArray()
+            val filter = when {
+                filters.size > 1 -> TickFilter.all(*filters)
+                filters.size == 1 -> filters.first()
+                else -> null
+            }
+            TickEvents.register(behaviour, filter, tickMethods)
         }
         fun registerEvents(behaviour: Behaviour) {
             if (eventMethods.isEmpty()) return
-            FilteredEvents.register(behaviour, behaviour, eventMethods)
+            val filter = if (behaviour.internalScope is EventFilter)
+                EventFilter.all(behaviour.internalScope as EventFilter, behaviour)
+            else {
+                behaviour
+            }
+            FilteredEvents.register(behaviour, filter, eventMethods)
         }
 
         private fun checkMethod(method: Method) {
