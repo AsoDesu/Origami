@@ -5,3 +5,16 @@ dependencies {
     implementation(project(":utils:designs")) { isTransitive = true }
     compileOnly(libs.paper.api)
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("library") {
+            from(components["java"])
+        }
+    }
+}

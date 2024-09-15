@@ -5,9 +5,10 @@ import cloud.commandframework.kotlin.MutableCommandBuilder
 import dev.asodesu.origami.engine.add
 import dev.asodesu.origami.engine.get
 import dev.asodesu.origami.engine.getOrAdd
+import dev.asodesu.origami.engine.getOrNull
 import dev.asodesu.origami.engine.impl.BehaviourContainer
 import dev.asodesu.origami.engine.player.container
-import dev.asodesu.origami.engine.remove
+import dev.asodesu.origami.engine.removeAll
 import dev.asodesu.origami.engine.replace
 import dev.asodesu.origami.engine.scene.PlayerScene
 import dev.asodesu.origami.engine.scene.Scenes
@@ -45,18 +46,18 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
                 container.getOrAdd<TestBehaviour>().test()
             }
             test.run("BehaviourContainer#get after getOrAdd") {
-                container.get<TestBehaviour>()?.test() == true
+                container.getOrNull<TestBehaviour>()?.test()
             }
             test.run("BehaviourContainer#get has applied") {
-                container.get<TestBehaviour>()?.applied == container
+                container.get<TestBehaviour>().applied == container
             }
 
             // remove
             test.run("BehaviourContainer#remove") {
-                container.remove<TestBehaviour>()?.test() == true
+                container.removeAll<TestBehaviour>().isEmpty()
             }
             test.run("BehaviourContainer#get after remove") {
-                container.get<TestBehaviour>() == null
+                container.getOrNull<TestBehaviour>() == null
             }
 
             // add
@@ -64,7 +65,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
                 container.add<TestBehaviour>().test()
             }
             test.run("BehaviourContainer#get after add") {
-                container.get<TestBehaviour>()?.test() == true
+                container.getOrNull<TestBehaviour>()?.test() == true
             }
 
             // list
@@ -85,7 +86,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
                 val didAdd = container.replace<TestBehaviour>(
                     TestBehaviour(container, 2)
                 ).test()
-                didAdd && container.get<TestBehaviour>()?.number == 2
+                didAdd && container.getOrNull<TestBehaviour>()?.number == 2
             }
 
             // list
@@ -115,7 +116,7 @@ fun MutableCommandBuilder<CommandSender>.applyBehaviourTests() {
                 player.container.get(TestBehaviour::class)?.test() == true
             }
             test.run("PlayerBehaviourContainer remove behaviour") {
-                container.remove(TestBehaviour::class) != null
+                container.removeAll(TestBehaviour::class).isNotEmpty()
             }
         }
     }

@@ -6,6 +6,7 @@ object BukkitUtilities {
 
     fun init(javaPlugin: JavaPlugin) {
         plugin = javaPlugin
+        if (!dataFolder.exists()) plugin.dataFolder.mkdir()
     }
 
 }

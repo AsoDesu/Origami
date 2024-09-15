@@ -8,7 +8,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.Listener
 
 abstract class OfflinePlayerScene(id: String) : Scene(id), PlayerScene<OfflinePlayer>, Listener {
-    private val uuids = mutableSetOf<UUID>()
+    protected val uuids = mutableSetOf<UUID>()
     override val players get() = uuids.map { Bukkit.getOfflinePlayer(it) }
 
     override fun addPlayer(player: OfflinePlayer) {

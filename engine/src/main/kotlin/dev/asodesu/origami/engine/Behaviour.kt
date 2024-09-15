@@ -5,6 +5,7 @@ import dev.asodesu.origami.engine.scopes.SceneScope
 import dev.asodesu.origami.engine.wiring.events.EventFilter
 import org.bukkit.event.Event
 import org.bukkit.event.Listener
+import org.bukkit.scheduler.BukkitTask
 
 /**
  * A Behaviour is a discrete component which adds custom logic to whatever
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener
 abstract class Behaviour : EventFilter, Destroyable, Listener, Debuggable {
     internal lateinit var internalGameObject: BehaviourApplicable
     internal var internalScope: SceneScope = SceneScope.global
+    internal var internalTickTasks: List<BukkitTask> = emptyList()
 
     protected val gameObject get() = internalGameObject
     protected val scope get() = internalScope
@@ -23,12 +25,14 @@ abstract class Behaviour : EventFilter, Destroyable, Listener, Debuggable {
     protected inline fun <reified T : Behaviour> has() = gameObject.has(T::class)
     protected inline fun <reified T : Behaviour> replace(instance: T? = null, scope: SceneScope? = this.scope) = gameObject.replace(T::class, instance, scope)
     protected inline fun <reified T : Behaviour> add(instance: T? = null, scope: SceneScope? = this.scope) = gameObject.add(T::class, instance, scope)
-    protected inline fun <reified T : Behaviour> remove() = gameObject.remove(T::class)
+    protected inline fun <reified T : Behaviour> remove(instance: T) = gameObject.remove(instance)
+    protected inline fun <reified T : Behaviour> removeFirst() = gameObject.removeFirst(T::class)
+    protected inline fun <reified T : Behaviour> removeAll() = gameObject.removeAll(T::class)
 
     override fun filter(event: Event): Boolean = true
 
     override fun destroy() {
-        gameObject.remove(this::class)
+        gameObject.remove(this)
     }
 
     override fun getDebugInfo() = buildString {

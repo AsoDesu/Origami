@@ -14,7 +14,9 @@ interface BehaviourApplicable {
     fun <T : Behaviour> has(clazz: KClass<T>): Boolean
     fun <T : Behaviour> replace(clazz: KClass<T>, instance: T? = null, scope: SceneScope? = null): T
     fun <T : Behaviour> add(clazz: KClass<T>, instance: T? = null, scope: SceneScope? = null): T
-    fun <T : Behaviour> remove(clazz: KClass<T>): T?
+    fun <T : Behaviour> remove(instance: T): Boolean
+    fun <T : Behaviour> removeFirst(clazz: KClass<T>): T?
+    fun <T : Behaviour> removeAll(clazz: KClass<T>): List<T>
 
     fun destroyBehaviour(instance: Behaviour)
 }

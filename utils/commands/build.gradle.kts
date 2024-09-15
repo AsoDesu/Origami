@@ -7,3 +7,16 @@ dependencies {
     api(libs.cloud.kotlin) { isTransitive = true }
     api(libs.cloud.mcextras) { isTransitive = true }
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("library") {
+            from(components["java"])
+        }
+    }
+}

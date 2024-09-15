@@ -7,6 +7,7 @@ val origamiVersion = findProperty("origami.version")?.toString() ?: "unmarked"
 plugins {
     kotlin("jvm") version "2.0.10" apply false
     alias(libs.plugins.run.paper) apply false
+    `maven-publish`
 }
 
 group = "dev.asodesu.origami"
@@ -27,6 +28,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "kotlin")
+    apply(plugin = "maven-publish")
     tasks.withType<KotlinCompile> {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)

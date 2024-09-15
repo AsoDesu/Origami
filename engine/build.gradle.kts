@@ -9,3 +9,16 @@ dependencies {
     api(project(":utils:designs")) { isTransitive = true }
     api(project(":utils:bukkit")) { isTransitive = true }
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("library") {
+            from(components["java"])
+        }
+    }
+}

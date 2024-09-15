@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 lateinit var plugin: JavaPlugin
 val pluginLogger get() = plugin.slF4JLogger
+val dataFolder get() = plugin.dataFolder
 
 val server get() = Bukkit.getServer()
 val pluginManager get() = server.pluginManager

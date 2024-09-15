@@ -8,7 +8,8 @@ inline fun <reified T : Behaviour> BehaviourApplicable.getOrAdd(scope: SceneScop
 inline fun <reified T : Behaviour> BehaviourApplicable.has() = this.has(T::class)
 inline fun <reified T : Behaviour> BehaviourApplicable.replace(instance: T? = null, scope: SceneScope? = null) = this.replace(T::class, instance, scope)
 inline fun <reified T : Behaviour> BehaviourApplicable.add(instance: T? = null, scope: SceneScope? = null) = this.add(T::class, instance, scope)
-inline fun <reified T : Behaviour> BehaviourApplicable.remove() = this.remove(T::class)
+inline fun <reified T : Behaviour> BehaviourApplicable.removeFirst() = this.removeFirst(T::class)
+inline fun <reified T : Behaviour> BehaviourApplicable.removeAll() = this.removeAll(T::class)
 
 inline fun <A : BehaviourApplicable, reified T : Behaviour> A.replaceBy(scope: SceneScope? = null, func: (A) -> T) = this.replace(T::class, func(this), scope)
 inline fun <A : BehaviourApplicable, reified T : Behaviour> A.addBy(scope: SceneScope? = null, func: (A) -> T) = this.add(T::class, func(this), scope)

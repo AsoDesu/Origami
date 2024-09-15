@@ -12,6 +12,7 @@ import dev.asodesu.origami.engine.wiring.events.ticks.TickMethods
 import dev.asodesu.origami.utilities.allMethods
 import dev.asodesu.origami.utilities.isDevEnvironment
 import java.lang.reflect.Method
+import org.bukkit.scheduler.BukkitTask
 
 internal object BehaviourWiring {
     private val cache = mutableMapOf<Class<out Behaviour>, BehaviourMeta>()
@@ -44,15 +45,15 @@ internal object BehaviourWiring {
 
         fun postApply(behaviour: Behaviour) = applyFunctions.forEach { it.invoke(behaviour) }
         fun postRemove(behaviour: Behaviour) = removeFunctions.forEach { it.invoke(behaviour) }
-        fun registerTickMethods(behaviour: Behaviour) {
-            if (tickMethods.isEmpty()) return
+        fun registerTickMethods(behaviour: Behaviour): List<BukkitTask> {
+            if (tickMethods.isEmpty()) return emptyList()
             val filters = listOfNotNull(behaviour.internalScope as? TickFilter, behaviour as? TickFilter).toTypedArray()
             val filter = when {
                 filters.size > 1 -> TickFilter.all(*filters)
                 filters.size == 1 -> filters.first()
                 else -> null
             }
-            TickEvents.register(behaviour, filter, tickMethods)
+            return TickEvents.register(behaviour, filter, tickMethods)
         }
         fun registerEvents(behaviour: Behaviour) {
             if (eventMethods.isEmpty()) return

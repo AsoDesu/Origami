@@ -25,7 +25,7 @@ import org.bukkit.event.world.WorldEvent
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
 
-fun Event.filterPlayer(player: OfflinePlayer): Boolean {
+fun Event.filterPlayer(player: OfflinePlayer, def: Boolean = true): Boolean {
     return when (this) {
         is EntityDamageByEntityEvent -> this.damager == player
         is PlayerEvent -> this.player == player
@@ -33,11 +33,11 @@ fun Event.filterPlayer(player: OfflinePlayer): Boolean {
         is InventoryInteractEvent -> this.whoClicked == player
         is BlockPlaceEvent -> this.player == player
         is BlockBreakEvent -> this.player == player
-        else -> true
+        else -> def
     }
 }
 
-fun Event.filterUUIDs(uuids: Set<UUID>): Boolean {
+fun Event.filterUUIDs(uuids: Set<UUID>, def: Boolean = true): Boolean {
     return when (this) {
         is EntityDamageByEntityEvent -> uuids.contains(this.damager.uniqueId)
         is PlayerEvent -> uuids.contains(this.player.uniqueId)
@@ -45,11 +45,11 @@ fun Event.filterUUIDs(uuids: Set<UUID>): Boolean {
         is InventoryInteractEvent -> uuids.contains(this.whoClicked.uniqueId)
         is BlockPlaceEvent -> uuids.contains(this.player.uniqueId)
         is BlockBreakEvent -> uuids.contains(this.player.uniqueId)
-        else -> true
+        else -> def
     }
 }
 
-fun Event.filterWorld(world: World): Boolean {
+fun Event.filterWorld(world: World, def: Boolean = true): Boolean {
     if (this is InventoryEvent && filterInventory(this.inventory, world)) return true
     return when(this) {
         // general events
@@ -71,7 +71,7 @@ fun Event.filterWorld(world: World): Boolean {
 
         is InventoryMoveItemEvent -> filterInventory(this.initiator, world)
         is InventoryPickupItemEvent -> filterInventory(this.inventory, world)
-        else -> true
+        else -> def
     }
 }
 
